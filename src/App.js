@@ -11,19 +11,25 @@ export default function App() {
       .then((data) => setProduct(data))
       .catch((error) => console.log(error.message));
   }, []);
-  console.log(product);
 
-  // const [quantity, setQuantity] = React.useState({
-  //   quantity: "0",
-  // });
+  const [cartItems, setCartItems] = React.useState([]);
 
-  // function handleChange(e) {
-  //   const { number, value } = e.target.value;
-  //   setQuantity((prevQuantity) => ({
-  //     ...prevQuantity,
-  //     [number]: value,
-  //   }));
-  // }
+  const handleClick = (item) => {
+    if (cartItems.indexOf(item) !== -1) return;
+    setCartItems([...cartItems, item]);
+  };
+
+  const handleChange = (item, numberAmount) => {
+    const index = cartItems.indexOf(item);
+    cartItems[index].amount = 1;
+    cartItems[index].amount += numberAmount;
+
+    if (cartItems[index].amount === 0) cartItems[index].amount = 1;
+
+    setCartItems([...cartItems]);
+
+    console.log(cartItems);
+  };
 
   return (
     <div>
@@ -36,11 +42,19 @@ export default function App() {
               return b.price - a.price;
             })
             .map((item) => (
-              <Favorite key={item.id} {...item} />
+              <Favorite
+                handleClick={handleClick}
+                product={item}
+                key={item.id}
+              />
             ))}
         </div>
         <div className="ml-20">
-          <Cart />
+          <Cart
+            cartItems={cartItems}
+            setCartItems={setCartItems}
+            handleChange={handleChange}
+          />
         </div>
       </div>
     </div>
