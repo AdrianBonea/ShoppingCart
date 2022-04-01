@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function Cart(props) {
-  const { cartItems, setCartItems, handleChange } = props;
+  const { cartItems, setCartItems, onAdd, onRemove } = props;
 
   const [price, setPrice] = React.useState(0);
 
@@ -9,17 +9,17 @@ export default function Cart(props) {
     const arr = cartItems.filter((item) => item.id !== id);
     setCartItems(arr);
     handlePrice();
-  };
+  }; //remove from cart button
 
   const handlePrice = () => {
     let total = 0;
-    cartItems.map((item) => (total += item.amount * item.price));
+    cartItems.map((item) => (total += item.qty * item.price));
     setPrice(total);
-  };
+  }; // calculate the total price
 
   React.useEffect(() => {
     handlePrice();
-  });
+  }); //keep the prioce updated
 
   return (
     <section className="min-w-[450px] min-h-[260px] w-auto border bg-slate-100/70 shadow-inner p-5">
@@ -35,9 +35,9 @@ export default function Cart(props) {
           <div key={item.id} className="flex flex-row">
             <div>{item.name}</div>
             <div>
-              <button onClick={() => handleChange(item, 1)}>+</button>
-              <button>{item.amount}</button>
-              <button onClick={() => handleChange(item, -1)}>-</button>
+              <button onClick={() => onAdd(item)}>+</button>
+              <button>{item.qty}</button>
+              <button onClick={() => onRemove(item)}>-</button>
             </div>
             <div> ${item.price} </div>
             <button onClick={() => handleRemove(item.id)}>Remove</button>
@@ -47,8 +47,8 @@ export default function Cart(props) {
           <div></div>
         ) : (
           <div className="text-lg font-bold">
-            <span>Total Price of your Cart </span>
-            <span>{price}</span>
+            <span>Total Price:</span>
+            <span>{parseFloat(price).toFixed(2)}</span>
           </div>
         )}
       </div>

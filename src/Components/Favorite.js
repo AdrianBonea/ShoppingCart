@@ -1,7 +1,7 @@
 import { BsCart2 } from "react-icons/bs";
 
 export default function Favorite(props) {
-  const { product, handleClick } = props;
+  const { product, onAdd } = props;
   return (
     <section className="ml-10 mt-5">
       <div id="favorite">
@@ -12,7 +12,7 @@ export default function Favorite(props) {
               Price: <span className="text-sky-600">${product.price}</span>
             </div>
             <button
-              onClick={() => handleClick(product)}
+              onClick={() => onAdd(product)}
               type="button"
               className="ml-4 flex flex-row items-center bg-green-500 p-2 rounded hover:bg-green-400 
                       text-white font-bold"

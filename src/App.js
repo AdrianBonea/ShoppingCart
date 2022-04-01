@@ -10,26 +10,35 @@ export default function App() {
       .then((res) => res.json())
       .then((data) => setProduct(data))
       .catch((error) => console.log(error.message));
-  }, []);
+  }, []); //fetching data from the api
 
   const [cartItems, setCartItems] = React.useState([]);
 
-  const handleClick = (item) => {
-    if (cartItems.indexOf(item) !== -1) return;
-    setCartItems([...cartItems, item]);
-  };
+  const onAdd = (product) => {
+    const exist = cartItems.find((item) => item.id === product.id);
+    if (exist) {
+      setCartItems(
+        cartItems.map((item) =>
+          item.id === product.id ? { ...exist, qty: exist.qty + 1 } : item
+        )
+      );
+    } else {
+      setCartItems([...cartItems, { ...product, qty: 1 }]);
+    }
+  }; //add items to the cart and update the quantity for +
 
-  const handleChange = (item, numberAmount) => {
-    const index = cartItems.indexOf(item);
-    cartItems[index].amount = 1;
-    cartItems[index].amount += numberAmount;
-
-    if (cartItems[index].amount === 0) cartItems[index].amount = 1;
-
-    setCartItems([...cartItems]);
-
-    console.log(cartItems);
-  };
+  const onRemove = (product) => {
+    const exist = cartItems.find((item) => item.id === product.id);
+    if (exist.qty === 1) {
+      setCartItems(cartItems.filter((item) => item.id !== product.id));
+    } else {
+      setCartItems(
+        cartItems.map((item) =>
+          item.id === product.id ? { ...exist, qty: exist.qty - 1 } : item
+        )
+      );
+    }
+  }; //remove the item from the cart and update the quantity for -
 
   return (
     <div>
@@ -42,18 +51,15 @@ export default function App() {
               return b.price - a.price;
             })
             .map((item) => (
-              <Favorite
-                handleClick={handleClick}
-                product={item}
-                key={item.id}
-              />
+              <Favorite onAdd={onAdd} product={item} key={item.id} />
             ))}
         </div>
         <div className="ml-20">
           <Cart
             cartItems={cartItems}
             setCartItems={setCartItems}
-            handleChange={handleChange}
+            onAdd={onAdd}
+            onRemove={onRemove}
           />
         </div>
       </div>
