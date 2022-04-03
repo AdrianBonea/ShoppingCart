@@ -1,7 +1,7 @@
 import { BsCart2 } from "react-icons/bs";
 
 export default function Favorite(props) {
-  const { product, onAdd } = props;
+  const { product, onAdd, currency } = props;
   return (
     <section className="ml-10 mt-5">
       <div id="favorite">
